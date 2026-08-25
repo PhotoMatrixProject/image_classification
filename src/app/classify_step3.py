@@ -108,11 +108,11 @@ class ClassificationTool:
     def _transform_image(self, img_path:str):
         try:
             contrast_stretched_image = self._stretch_contrast(img_path)
-            fft = self._get_fft(img_path)
-            # lbp = self._extract_lbp(img_path)
+            # fft = self._get_fft(img_path)
+            lbp = self._extract_lbp(img_path)
             # edges = self._extract_edges(img_path)
 
-            new_img = np.append(contrast_stretched_image, np.expand_dims(fft, 2), axis=2)
+            new_img = np.append(contrast_stretched_image, np.expand_dims(lbp, 2), axis=2)
             # new_img = np.append(new_img, np.expand_dims(lbp, 2), axis=2)
             new_tensor_img = transforms.ToTensor()(new_img)
 
