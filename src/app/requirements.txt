@@ -1,0 +1,8 @@
+PySide6
+requests
+opencv-python
+scikit-image
+numpy
+torch
+torchvision
+Pillow
