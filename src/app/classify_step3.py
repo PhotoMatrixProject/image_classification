@@ -23,7 +23,7 @@ n_points = radius * 8
 class ClassificationTool:
     def __init__(self, classification_path):
         self.classification_path = classification_path
-        self.class_names = ['02_PHOTOMONTAGES', '03_MONEY + POSTAGE STAMPS', 
+        self.class_names = ['03_MONEY + POSTAGE STAMPS', 
                             '04_GRAPHIC ORNAMENTS', '05_SCHEMES', '06_BUILDINGS', 
                             '08_MODELS OF ARCHUTECTURE', '09_ARCHITECTURAL PLANS', '10_SCULPTURES IN THE ROUND', 
                             '11_RELIEF + INTAGLIO', '12_BOOKS', '13_MACHINES, VEHICLES', '19_FURNITURE', '21_COINS, MEDALS', 
@@ -35,8 +35,23 @@ class ClassificationTool:
                             '57_ other + architecture', '62_maps', '63_clocks', '66_fabric_bags', '67_fans', 
                             '68_lamps', '69_vessels_of_all_kinds']
         # TODO: check if model exists, if not - download it from the server???
-        self.big_model = self._load_model_vgg19(r'.\model\torch_model_vgg19_step3_lbp.pt', 41)
-        
+        self.big_model = self._load_model_swin_b(r'model\torch_model_swin_b_step3_fft_lbp_40cls.pt', 40)
+
+    def _load_model_swin_b(self, weight_path:str, classes_num:int):
+        model = models.swin_b(weights = models.Swin_B_Weights.DEFAULT)
+        model.head = nn.Linear(in_features=1024, out_features=classes_num, bias=True)
+
+        pretrained_weights = model.features[0][0].weight
+        new_featres = nn.Sequential(*list(model.features.children()))
+        new_featres[0][0] = nn.Conv2d(5, 128, kernel_size=(4, 4), stride=(4, 4))
+        new_featres[0][0].weight.data.normal_(0, 0.001)
+        new_featres[0][0].weight.data[:, :3, :, :] = nn.Parameter(pretrained_weights)
+
+        model.features = new_featres
+        model.load_state_dict(torch.load(weight_path, weights_only=True, map_location=torch.device('cpu') ))
+        model.eval()
+        return model   
+
     def _load_model_vgg16(self, weight_path:str, classes_num:int):
         model = models.vgg16_bn()   
         model.classifier[-1] = nn.Linear(4096, classes_num, bias=True)
@@ -108,12 +123,12 @@ class ClassificationTool:
     def _transform_image(self, img_path:str):
         try:
             contrast_stretched_image = self._stretch_contrast(img_path)
-            # fft = self._get_fft(img_path)
+            fft = self._get_fft(img_path)
             lbp = self._extract_lbp(img_path)
             # edges = self._extract_edges(img_path)
 
-            new_img = np.append(contrast_stretched_image, np.expand_dims(lbp, 2), axis=2)
-            # new_img = np.append(new_img, np.expand_dims(lbp, 2), axis=2)
+            new_img = np.append(contrast_stretched_image, np.expand_dims(fft, 2), axis=2)
+            new_img = np.append(new_img, np.expand_dims(lbp, 2), axis=2)
             new_tensor_img = transforms.ToTensor()(new_img)
 
             return new_tensor_img
@@ -123,7 +138,7 @@ class ClassificationTool:
     
     def _predict_big(self, img_path:str):
         img_tensor = self._transform_image(img_path)
-        t = torch.zeros((1, 4, 512, 512), dtype=torch.float32)
+        t = torch.zeros((1, 5, 512, 512), dtype=torch.float32)
         t[0] = img_tensor
         with torch.no_grad():
             mo_pred = torch.nn.functional.softmax(self.big_model(t), dim = 1).numpy() #mo(t).numpy()

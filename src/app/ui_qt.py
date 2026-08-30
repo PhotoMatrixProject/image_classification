@@ -327,8 +327,8 @@ class GalleryWindow(QtWidgets.QWidget):
         self.label_label.setFont(self.small_font)
 
         # self.class_labels =  ['library stamps', 'misaligned', 'multiple images', 'not images', 'ok', 'too big', 'too small'] # step1
-        # self.class_labels =  ['painting', 'photo'] # step2
-        self.class_labels = ['02_PHOTOMONTAGES', '03_MONEY + POSTAGE STAMPS', 
+        # self.class_labels =  ['painting', 'photo', 'photomontage'] # step2
+        self.class_labels = ['03_MONEY + POSTAGE STAMPS', 
                         '04_GRAPHIC ORNAMENTS', '05_SCHEMES', '06_BUILDINGS', 
                         '08_MODELS OF ARCHUTECTURE', '09_ARCHITECTURAL PLANS', '10_SCULPTURES IN THE ROUND', 
                         '11_RELIEF + INTAGLIO', '12_BOOKS', '13_MACHINES, VEHICLES', '19_FURNITURE', '21_COINS, MEDALS', 

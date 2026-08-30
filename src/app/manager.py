@@ -35,8 +35,8 @@ class Manager:
 
     def create_class_dirs(self):
         # classes = ['library stamps', 'misaligned', 'multiple images', 'not images', 'ok', 'too big', 'too small'] # step1
-        # classes =  ['painting', 'photo'] # step2
-        classes =  ['02_PHOTOMONTAGES', '03_MONEY + POSTAGE STAMPS', 
+        # classes =  ['painting', 'photo', 'photomontage'] # step2
+        classes =  ['03_MONEY + POSTAGE STAMPS', 
             '04_GRAPHIC ORNAMENTS', '05_SCHEMES', '06_BUILDINGS', 
             '08_MODELS OF ARCHUTECTURE', '09_ARCHITECTURAL PLANS', '10_SCULPTURES IN THE ROUND', 
             '11_RELIEF + INTAGLIO', '12_BOOKS', '13_MACHINES, VEHICLES', '19_FURNITURE', '21_COINS, MEDALS', 

@@ -23,9 +23,9 @@ n_points = radius * 8
 class ClassificationTool:
     def __init__(self, classification_path):
         self.classification_path = classification_path
-        self.class_names = ['painting', 'photo']
+        self.class_names = ['painting', 'photo', 'photomontage']
         
-        self.big_model = self._load_model_swin_b(r'.\model\torch_model_swin_b_step2.pt', 2)  
+        self.big_model = self._load_model_swin_b(r'.\model\torch_model_swin_b_step2_3cls_lbp.pt', 3)  
      
     def _load_model_vgg16(self, weight_path:str, classes_num:int):
         model = models.vgg16_bn()   
