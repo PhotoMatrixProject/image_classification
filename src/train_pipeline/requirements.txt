@@ -6,5 +6,5 @@ opencv-python
 scikit-image
 torch
 torchvision
-pillow
+Pillow
 scikit-learn
